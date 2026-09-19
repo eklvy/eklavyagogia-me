@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eklavya Gogia</title>
+<meta name="description" content="Eklavya Gogia — projects, live GitHub activity, and professional background.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⌁</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="hero-canvas" aria-hidden="true"></canvas>
+
+<header class="nav" id="nav">
+  <a href="#home" class="nav__mark">EG</a>
+  <nav class="nav__links" id="navLinks">
+    <a href="#home">Home</a>
+    <a href="#work">Work</a>
+    <a href="#about">About</a>
+    <a href="#connect">Connect</a>
+  </nav>
+  <button class="nav__toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<main>
+
+  <section id="home" class="hero">
+    <div class="hero__inner">
+      <img class="hero__avatar" src="https://github.com/eklvy.png" alt="Eklavya Gogia" width="72" height="72" loading="eager">
+      <h1 class="hero__name">Eklavya&nbsp;Gogia</h1>
+      <p class="hero__role" data-editable>Add your one-line role here — e.g. "Backend developer, currently learning distributed systems."</p>
+      <div class="hero__cta">
+        <a href="https://github.com/eklvy" target="_blank" rel="noopener" class="btn btn--primary">View GitHub</a>
+        <a href="https://www.linkedin.com/in/eklavya-gogia-67b00a321/" target="_blank" rel="noopener" class="btn btn--ghost">Connect on LinkedIn</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="about">
+    <h2>About</h2>
+    <p class="about__text" data-editable>
+      Replace this paragraph with two or three sentences about yourself — what you build, what you're
+      learning right now, and what kind of work or opportunities you're looking for. Write it the way
+      you'd introduce yourself to someone at a meetup, not like a résumé line.
+    </p>
+    <ul class="about__facts">
+      <li><span>Based in</span><b data-editable>Your city, India</b></li>
+      <li><span>Focus</span><b data-editable>e.g. Web dev, ML, systems</b></li>
+      <li><span>Currently</span><b data-editable>e.g. Studying / building X</b></li>
+    </ul>
+  </section>
+
+  <section id="work" class="dash">
+    <div class="dash__head">
+      <h2>Live from GitHub</h2>
+      <p class="dash__note" id="ghNote">Loading current activity…</p>
+    </div>
+
+    <div class="dash__stats">
+      <div class="stat"><span class="stat__num" id="statRepos">–</span><span class="stat__label">Public repos</span></div>
+      <div class="stat"><span class="stat__num" id="statFollowers">–</span><span class="stat__label">Followers</span></div>
+      <div class="stat"><span class="stat__num" id="statContrib">–</span><span class="stat__label">Contributions / yr</span></div>
+      <div class="stat"><span class="stat__num" id="statStreak">–</span><span class="stat__label">Day streak</span></div>
+    </div>
+
+    <div class="heatmap-outer">
+      <div class="heatmap-scroll">
+        <div class="heatmap" id="heatmap"></div>
+      </div>
+      <div class="heatmap__legend">
+        <span>Less</span>
+        <i class="sq l0"></i><i class="sq l1"></i><i class="sq l2"></i><i class="sq l3"></i><i class="sq l4"></i>
+        <span>More</span>
+      </div>
+    </div>
+
+    <div class="repo-grid" id="repoGrid">
+      <div class="repo-skel"></div><div class="repo-skel"></div><div class="repo-skel"></div><div class="repo-skel"></div>
+    </div>
+
+    <a href="https://github.com/eklvy?tab=repositories" target="_blank" rel="noopener" class="link-more">All repositories on GitHub →</a>
+  </section>
+
+  <section id="connect" class="linkedin">
+    <h2>Professional</h2>
+    <div class="linkedin__card">
+      <div class="linkedin__photo">EG</div>
+      <div class="linkedin__body">
+        <h3>Eklavya Gogia</h3>
+        <p class="linkedin__headline" data-editable>Paste your LinkedIn headline here — the line under your name on your profile.</p>
+        <ul class="linkedin__points">
+          <li data-editable>Highlight one — a role, program, or achievement</li>
+          <li data-editable>Highlight two — a skill or certification</li>
+        </ul>
+        <a href="https://www.linkedin.com/in/eklavya-gogia-67b00a321/" target="_blank" rel="noopener" class="btn btn--primary">View full profile ↗</a>
+      </div>
+    </div>
+    <!--
+      Optional: for a badge that auto-syncs with your live LinkedIn profile (photo, headline,
+      connect button), generate LinkedIn's official embed at developer.linkedin.com/member-profile-plugin
+      and paste the two snippets it gives you into the div below and just before </body>.
+    -->
+    <div id="linkedin-badge"></div>
+  </section>
+
+  <section id="contact" class="contact">
+    <h2>Get in touch</h2>
+    <p data-editable>Open to opportunities / collaborations — reach out any time.</p>
+    <div class="contact__links">
+      <a href="mailto:you@eklavyagogia.me" data-editable>you@eklavyagogia.me</a>
+      <a href="https://github.com/eklvy" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="https://www.linkedin.com/in/eklavya-gogia-67b00a321/" target="_blank" rel="noopener">LinkedIn ↗</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>© <span id="year"></span> Eklavya Gogia — GitHub data loads live from the GitHub API on each visit.</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
