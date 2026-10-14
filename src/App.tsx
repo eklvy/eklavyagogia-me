@@ -480,7 +480,7 @@ function Contact() {
   useEffect(() => {
     const controller = new AbortController()
     const timeout = window.setTimeout(() => controller.abort(), 8000)
-    fetch('/api/contact/config', { signal: controller.signal, credentials: 'same-origin' })
+    fetch('/api/contact', { signal: controller.signal, credentials: 'same-origin' })
       .then(async response => response.ok ? response.json() : null)
       .then(config => {
         if (!controller.signal.aborted && config?.enabled === true && typeof config.siteKey === 'string' && config.siteKey) {

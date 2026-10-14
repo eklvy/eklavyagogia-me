@@ -1,6 +1,6 @@
 # Portfolio backend
 
-This project now serves the portfolio and `/api/contact` from one Node.js application. It replaces the browser-to-Formspree submission path. There are no user accounts or public administrative endpoints. Message contents are sent as plain text to the configured owner address, not stored in an application database.
+The production portfolio is a Vite site with a same-origin Vercel Function at `/api/contact`. A separate Express adapter remains available for local or container hosting. There are no user accounts or public administrative endpoints. Message contents are sent as plain text to the configured owner address and are not stored in an application database.
 
 ## What is implemented
 
@@ -13,7 +13,7 @@ This project now serves the portfolio and `/api/contact` from one Node.js applic
 - Content-derived idempotency keys prevent identical provider retries from producing duplicate emails within Resend's idempotency retention window. Identical messages within that window are intentionally treated as one message. An accepted API response is not proof of inbox delivery.
 - Provider timeouts, neutral public errors, request IDs, and logs containing only event names and request IDs. No automatic replies, request-body logging, or provider-error dumps.
 - CSP, clickjacking protection, MIME sniffing protection, production HSTS (for this host only), restrictive browser feature permissions, and no-cache API responses.
-- Server-side credentials only. `/api/contact/config` returns just enabled status and the public Turnstile site key. There are no `VITE_` secrets.
+- Server-side credentials only. `GET /api/contact` returns just enabled status and the public Turnstile site key. There are no `VITE_` secrets.
 
 ## Run locally
 
@@ -26,33 +26,28 @@ This project now serves the portfolio and `/api/contact` from one Node.js applic
 
 ## Enable real contact delivery
 
-1. Create a Cloudflare Turnstile widget restricted to `eklavyagogia.me`. Put its public key in `TURNSTILE_SITE_KEY` and its secret in `TURNSTILE_SECRET_KEY`. Use separate official test keys for local testing; production explicitly rejects those test keys.
+1. Create a Cloudflare Turnstile widget restricted to `www.eklavyagogia.me`. Put its public key in `TURNSTILE_SITE_KEY` and its secret in `TURNSTILE_SECRET_KEY`. Use separate official test keys for local testing; production explicitly rejects those test keys.
 2. Create a Resend account and verify a sending subdomain such as `contact.eklavyagogia.me`. Configure only Resend's supplied DNS records for that subdomain. Preserve the existing Namecheap apex MX/SPF records used for forwarding. Do not create a second SPF record at the same hostname.
 3. Create a sending-only Resend API key restricted to that verified domain where available. Store it as `RESEND_API_KEY`. Set `CONTACT_FROM` to an address on the verified subdomain and `CONTACT_TO=ext.eklavya@gmail.com`.
-4. Connect a private Redis service using `REDIS_URL`. Use a strong password; use `rediss://` for a connection across a public network. Generate `RATE_LIMIT_SECRET` with `openssl rand -hex 32`. Keep it stable across instances and deployments so counters and idempotency keys remain consistent.
-5. Set `CONTACT_ENABLED=true`, `NODE_ENV=production`, and `APP_ORIGIN=https://eklavyagogia.me`. Restart the backend. Missing required settings prevent enabled startup. Redis startup failures also prevent startup.
-6. Configure the host's actual proxy IPs/CIDRs in `TRUST_PROXY_CIDRS`, and restrict direct access to the app server. Do not guess a forwarded-header trust rule. If the hosting platform cannot supply trustworthy proxy/IP handling, keep contact disabled until its adapter is configured. With proxy trust disabled, a reverse proxy's requests share an IP budget; this is conservative but may block legitimate visitors.
+4. Create a password-protected managed Redis database and add its TLS connection URL as `REDIS_URL` (`rediss://...`). Generate `RATE_LIMIT_SECRET` with `openssl rand -hex 32`. Keep it stable so rate-limit and email-idempotency keys remain consistent.
+5. In Vercel, add `APP_ORIGIN=https://www.eklavyagogia.me`, `CONTACT_FROM=portfolio@contact.eklavyagogia.me`, `CONTACT_TO=ext.eklavya@gmail.com`, and every key above to Production. Finally set `CONTACT_ENABLED=true` and redeploy. Missing or insecure settings make the function fail closed instead of sending email.
+6. Do not add `TRUST_PROXY_CIDRS` on Vercel. The Vercel adapter reads its platform-managed client-IP header and validates it before using a hashed value for rate limiting. `TRUST_PROXY_CIDRS` only applies to the standalone Express server.
 
 Keep secrets in the hosting provider's secret/environment settings, never in frontend code, Git, screenshots, or chat. No services or accounts have been provisioned by this code change.
 
 ## Deploy
 
-Use a host supporting a persistent Node application/container plus Redis. Figma static publishing, GitHub Pages, and uploading only `dist` cannot run this backend. Configure a single public origin for frontend and API.
+Vercel is the production host. It builds with `pnpm run build:web`, serves `dist`, and deploys `api/contact.ts` as a Node.js Function. `vercel.json` adds browser security headers and a 30-second function budget. Pushes to `main` trigger deployment through the connected GitHub repository.
 
-- Install: `pnpm install --frozen-lockfile --ignore-scripts`
-- Build: `pnpm run build`
-- Start: `node build/server/index.js`
-- Port: platform `PORT`, with `HOST=0.0.0.0` where required.
-- Health check: `/api/health`
-- Enable HTTPS at the host or reverse proxy. Redirect HTTP to HTTPS and `www` to the apex before traffic reaches the app. The application intentionally does not trust arbitrary host or forwarded-protocol headers to construct redirects.
+The contact function deliberately remains disabled until all required environment variables exist. After changing an environment variable, create a new production deployment because running deployments do not receive later changes.
 
-A non-root, multi-stage `Dockerfile` is included. `compose.yaml` is a local/private deployment starting point with password-protected, persistent Redis, no public Redis port, and the app bound to host loopback. To try it, copy `.env.example`, set a random hex `REDIS_PASSWORD`, and run `docker compose up --build`. It does not include public TLS or DNS configuration; add those through the chosen host/reverse proxy before launch.
+A non-root, multi-stage `Dockerfile` and the Express server remain available as an alternative persistent deployment. `compose.yaml` starts password-protected Redis without exposing it publicly. That path still uses `/api/health` and the `TRUST_PROXY_CIDRS` rules described in `.env.example`.
 
 Only the `dist` folder is exposed by the server. Unknown paths return 404; `/api` paths never fall back to HTML. Public metadata is already set to the intended domain.
 
 ## Launch checks still requiring real services
 
-- Configure the actual production host, its trusted proxy boundary, HTTPS and domain routing. No DNS changes are needed until that host is chosen.
+- Confirm both `eklavyagogia.me` and `www.eklavyagogia.me` resolve through Vercel, with one redirecting to the canonical `www` origin.
 - Check a real Turnstile challenge, a manually submitted message, its Resend event and receipt in Gmail, and Reply-To behaviour. No test email is sent automatically.
 - Verify live fonts, widget/CSP compatibility, keyboard/mobile behaviour, real browser zoom, and provider failure recovery.
 - Enable spending/usage alerts and monitor rate-limit/provider events. Application controls cannot eliminate denial-of-service attacks at the network edge; use the host's edge protections.

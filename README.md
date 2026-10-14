@@ -1,7 +1,7 @@
 # Eklavya Gogia — Portfolio
 
 Source for [eklavyagogia.me](https://eklavyagogia.me), built with React, TypeScript,
-Vite, and Tailwind CSS.
+Vite, Tailwind CSS, and a Vercel Function for secure contact delivery.
 
 ## Local preview
 
@@ -15,10 +15,10 @@ Open `http://localhost:3001`.
 
 ## Deployment
 
-Pushes to `main` build the frontend and deploy `dist/` through GitHub Pages. The
-custom domain is preserved through `public/CNAME`.
+Vercel deploys every push to `main`. It serves the Vite production build and the
+`/api/contact` function from the same origin. GitHub Pages deployment is disabled
+so only one production host controls the custom domain.
 
-GitHub Pages is static hosting, so it does not run the Express contact backend.
-Until a Node-compatible production host and its required secrets are configured,
-the contact form uses the email-draft fallback. See [BACKEND.md](BACKEND.md) for the
-server setup and security requirements.
+The form keeps its email-draft fallback until every required production setting is
+present and `CONTACT_ENABLED=true`. See [BACKEND.md](BACKEND.md) for the exact
+settings and launch checks.
