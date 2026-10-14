@@ -1,26 +1,24 @@
-# eklavyagogia.me
+# Eklavya Gogia — Portfolio
 
-Static site: `index.html` + `style.css` + `script.js`. No build step — open `index.html`
-in a browser to preview, or deploy the folder as-is.
+Source for [eklavyagogia.me](https://eklavyagogia.me), built with React, TypeScript,
+Vite, and Tailwind CSS.
 
-## Before you publish, edit these
+## Local preview
 
-Search each file for the placeholder text and swap in your own words:
+```bash
+pnpm install --frozen-lockfile --ignore-scripts
+pnpm run build
+PORT=3001 APP_ORIGIN=http://localhost:3001 CONTACT_ENABLED=false pnpm start
+```
 
-- `index.html` → hero role line, About paragraph, About facts (city / focus / currently),
-  LinkedIn headline + two highlight bullets, contact email.
-- GitHub username is set once, at the top of `script.js`: `const GH_USER = 'eklvy';`
-- LinkedIn URL appears three times in `index.html` (hero button, Connect card, footer) —
-  find-and-replace if it ever changes.
+Open `http://localhost:3001`.
 
-## Optional: official LinkedIn badge
+## Deployment
 
-For a badge that auto-syncs with your live profile photo/headline, generate one at
-developer.linkedin.com/member-profile-plugin (you'll need to be logged into LinkedIn) and
-paste its two snippets into `<div id="linkedin-badge">` and just before `</body>` in `index.html`.
+Pushes to `main` build the frontend and deploy `dist/` through GitHub Pages. The
+custom domain is preserved through `public/CNAME`.
 
-## Deploy to eklavyagogia.me
-
-See the step-by-step in the chat where this was built. Short version: push this folder to a
-GitHub repo, turn on GitHub Pages, then point your domain's DNS at it and set it as the
-custom domain in the repo's Pages settings.
+GitHub Pages is static hosting, so it does not run the Express contact backend.
+Until a Node-compatible production host and its required secrets are configured,
+the contact form uses the email-draft fallback. See [BACKEND.md](BACKEND.md) for the
+server setup and security requirements.

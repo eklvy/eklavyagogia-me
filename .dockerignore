@@ -1,0 +1,11 @@
+node_modules
+dist
+build
+.git
+.env*
+!.env.example
+.DS_Store
+**/.DS_Store
+tests
+*.log
+.figma/design-context

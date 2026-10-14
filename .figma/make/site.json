@@ -1,0 +1,11 @@
+{
+  "title": "Eklavya Gogia — AI/ML Portfolio",
+  "description": "AI/ML undergraduate at The NorthCap University. Explore Eklavya Gogia’s contributions to campus software, local AI systems, and model drift research.",
+  "robots": {
+    "index": true
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
